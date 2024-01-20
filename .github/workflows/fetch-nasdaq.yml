@@ -10,12 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: make-temp-directory
-        run: mkdir -p $GITHUB_WORKSPACE/stocks
       - name: fetch-nasdaq
-        run: "curl --user-agent 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36' https://api.nasdaq.com/api/screener/stocks?offset=0&download=true > /tmp/stocks.json"
-      - name: parse-json
-        run: "cat /tmp/stocks.json | jq '.data.rows' > $GITHUB_WORKSPACE/stocks/stocks.json"
+        run: "curl --user-agent 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:85.0) Gecko/20100101 Firefox/85.0' https://api.nasdaq.com/api/screener/stocks\\exchange\\=nasdaq\\&download\\=true > $GITHUB_WORKSPACE/nasdaq.json"
       - name: commit-new-files
         run: |
           git config user.name github-actions
