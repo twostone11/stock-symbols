@@ -10,8 +10,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - name: fetch-nasdaq
-        run: "curl --user-agent 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:85.0) Gecko/20100101 Firefox/85.0' https://api.nasdaq.com/api/screener/stocks\\exchange\\=nasdaq\\&download\\=true > $GITHUB_WORKSPACE/nasdaq.json"
+        run: "curl --user-agent 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:85.0) Gecko/20100101 Firefox/85.0' https://api.nasdaq.com/api/screener/stocks\\?exchange\\=nasdaq\\&download\\=true > /tmp/nasdaq.json"
+      - name: parse-nasdaq
+        run: "cat /tmp/nasdaq.json | jq '.data.rows' > $GITHUB_WORKSPACE/nasdaq.json"
+
+      - name: fetch-amex
+        run: "curl --user-agent 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:85.0) Gecko/20100101 Firefox/85.0' https://api.nasdaq.com/api/screener/stocks\\?exchange\\=amex\\&download\\=true > /tmp/amex.json"
+      - name: parse-amex
+        run: "cat /tmp/amex.json | jq '.data.rows' > $GITHUB_WORKSPACE/amex.json"
+
+      - name: fetch-nyse
+        run: "curl --user-agent 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:85.0) Gecko/20100101 Firefox/85.0' https://api.nasdaq.com/api/screener/stocks\\?exchange\\=nyse\\&download\\=true > /tmp/nyse.json"
+      - name: parse-nyse
+        run: "cat /tmp/nyse.json | jq '.data.rows' > $GITHUB_WORKSPACE/nyse.json"
+
       - name: commit-new-files
         run: |
           git config user.name github-actions
