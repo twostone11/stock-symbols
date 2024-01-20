@@ -13,7 +13,7 @@ jobs:
       - name: make-temp-directory
         run: mkdir -p $GITHUB_WORKSPACE/stocks
       - name: fetch-nasdaq
-        run: "curl https://api.nasdaq.com/api/screener/stocks?offset=0&download=true > /tmp/stocks.json"
+        run: "curl --user-agent 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36' https://api.nasdaq.com/api/screener/stocks?offset=0&download=true > /tmp/stocks.json"
       - name: parse-json
         run: "cat /tmp/stocks.json | jq '.data.rows' > $GITHUB_WORKSPACE/stocks/stocks.json"
       - name: commit-new-files
