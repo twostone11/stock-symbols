@@ -1,0 +1,25 @@
+name: Fetch Stock Tickers
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: make-temp-directory
+        run: mkdir -p $GITHUB_WORKSPACE/stocks
+      - name: fetch-nasdaq
+        run: "curl https://api.nasdaq.com/api/screener/stocks?offset=0&download=true > /tmp/stocks.json"
+      - name: parse-json
+        run: "cat /tmp/stocks.json | jq '.data.rows' > $GITHUB_WORKSPACE/stocks/stocks.json"
+      - name: commit-new-files
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "generated"
+          git push
